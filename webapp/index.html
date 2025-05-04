@@ -2,16 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TON Crypto Wallet</title>
+    <title>TON Wallet Connect</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://ton-connect.github.io/tonconnect-sdk/tonconnect-sdk.min.js"></script>
-    <script src="app.js"></script>
+    <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
 </head>
 <body>
-    <h1>Оплата в TON</h1>
+    <h1>TON Кошелёк</h1>
     <button onclick="connectWallet()">Подключить кошелёк</button>
-    <button onclick="sendTon()">Отправить 1 TON</button>
-    <div id="status"></div>
+    <div id="status">Статус: не подключён</div>
+    <script src="app.js"></script>
 </body>
 </html>

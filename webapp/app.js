@@ -1,39 +1,35 @@
-let connector;
+// Инициализация TonConnect
+const connector = new TonConnect.TonConnect({
+    manifestUrl: "https://freezie7.github.io/testminiapp/webapp/tonconnect-manifest.json"
+});
 
-// Подключаем кошелёк через TonConnect
-function connectWallet() {
-    connector = new TonConnect.TonConnect({
-        manifestUrl: "https://freezie7.github.io/testminiapp/tonconnect-manifest.json"
-    });
-
-    connector.onStatusChange((wallet) => {
-        document.getElementById("status").innerText = wallet ? "Кошелёк подключён!" : "Отключён";
-    });
-
-    connector.connect("tonconnect");
+// Проверяем, запущено ли в Telegram WebApp
+function isTelegram() {
+    return Boolean(window.Telegram?.WebApp?.initData);
 }
 
-// Отправляем транзакцию
-async function sendTon() {
-    if (!connector.connected) {
-        alert("Сначала подключите кошелёк!");
+async function connectWallet() {
+    if (!isTelegram()) {
+        alert("Откройте мини-приложение в Telegram!");
         return;
     }
 
-    const transaction = {
-        validUntil: Math.floor(Date.now() / 1000) + 300, // 5 минут
-        messages: [
-            {
-                address: "EQAB...ваш_TON_адрес...", // Куда отправляем TON
-                amount: "1000000000", // 1 TON (в нано-TON)
-            }
-        ]
-    };
-
     try {
-        const result = await connector.sendTransaction(transaction);
-        Telegram.WebApp.sendData(JSON.stringify({ status: "paid", tx: result }));
+        // Подключаем кошелёк
+        const wallets = await connector.getWallets();
+        const wallet = wallets[0]; // Берём первый доступный кошелёк (например, TonKeeper)
+
+        // Открываем интерфейс подключения
+        await connector.connect({ jsBridgeKey: wallet.jsBridgeKey });
+
+        // Обновляем статус
+        connector.onStatusChange((wallet) => {
+            const statusDiv = document.getElementById("status");
+            statusDiv.innerText = wallet ? "Кошелёк подключён!" : "Отключён";
+        });
+
     } catch (err) {
+        console.error("Ошибка подключения:", err);
         alert("Ошибка: " + err.message);
     }
 }
