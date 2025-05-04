@@ -1,16 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>TON Wallet Connect</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Подключаем TonConnect SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
+  <meta charset="UTF-8">
+  <title>TON Wallet</title>
+  <!-- Подключаем TonConnect SDK с резервными ссылками -->
+  <script>
+    function loadTonConnect() {
+      const sources = [
+        'https://sdk.tonconnect.io/tonconnect-sdk.min.js',
+        'https://cdn.jsdelivr.net/npm/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js',
+        'https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js'
+      ];
+      
+      let loaded = false;
+      for (const src of sources) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.crossOrigin = 'anonymous';
+        script.onload = () => {
+          if (!loaded) {
+            loaded = true;
+            console.log('TonConnect SDK загружен с:', src);
+            initializeApp();
+          }
+        };
+        script.onerror = () => console.error('Не удалось загрузить SDK с:', src);
+        document.head.appendChild(script);
+      }
+    }
+    
+    function initializeApp() {
+      const appScript = document.createElement('script');
+      appScript.src = 'app.js';
+      document.head.appendChild(appScript);
+    }
+  </script>
 </head>
-<body>
-    <h1>Подключение TON кошелька</h1>
-    <button onclick="connectWallet()">Подключить кошелёк</button>
-    <div id="status">Статус: не подключён</div>
-    <script src="app.js"></script>
+<body onload="loadTonConnect()">
+  <h1>Подключение TON WALLET</h1>
+  <button id="connectButton" disabled>Подключить кошелёк</button>
+  <div id="status">Загрузка SDK...</div>
 </body>
 </html>
