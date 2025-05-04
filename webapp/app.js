@@ -4,7 +4,7 @@ if (typeof TonConnect === 'undefined') {
 }
 
 const connector = new TonConnect.TonConnect({
-    manifestUrl: "https://freezie7.github.io/testminiapp/tonconnect-manifest.json"
+    manifestUrl: "https://freezie7.github.io/testminiapp/webapp/tonconnect-manifest.json"
 });
 
 async function connectWallet() {
