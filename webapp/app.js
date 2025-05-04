@@ -1,31 +1,30 @@
-// Инициализация TonConnect
-const connector = new TonConnect.TonConnect({
-    manifestUrl: "https://freezie7.github.io/testminiapp/webapp/tonconnect-manifest.json"
-});
-
-// Проверяем, запущено ли в Telegram WebApp
-function isTelegram() {
-    return Boolean(window.Telegram?.WebApp?.initData);
+// Проверяем, что TonConnect загрузился
+if (typeof TonConnect === 'undefined') {
+    alert('TonConnect SDK не загружен! Проверьте подключение к интернету.');
 }
 
+const connector = new TonConnect.TonConnect({
+    manifestUrl: "https://freezie7.github.io/testminiapp/tonconnect-manifest.json"
+});
+
 async function connectWallet() {
-    if (!isTelegram()) {
-        alert("Откройте мини-приложение в Telegram!");
+    if (!window.Telegram?.WebApp?.initData) {
+        alert('Откройте приложение в Telegram!');
         return;
     }
 
     try {
-        // Подключаем кошелёк
+        // Получаем список доступных кошельков
         const wallets = await connector.getWallets();
-        const wallet = wallets[0]; // Берём первый доступный кошелёк (например, TonKeeper)
+        const wallet = wallets[0]; // TonKeeper или другой кошелёк
 
-        // Открываем интерфейс подключения
+        // Подключаемся
         await connector.connect({ jsBridgeKey: wallet.jsBridgeKey });
 
         // Обновляем статус
         connector.onStatusChange((wallet) => {
             const statusDiv = document.getElementById("status");
-            statusDiv.innerText = wallet ? "Кошелёк подключён!" : "Отключён";
+            statusDiv.innerText = wallet ? "Кошелёк подключён: " + wallet.device.appName : "Отключён";
         });
 
     } catch (err) {

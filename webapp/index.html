@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <title>TON Wallet Connect</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
+    <!-- Подключаем TonConnect SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
 </head>
 <body>
-    <h1>TON Кошелёк</h1>
+    <h1>Подключение TON кошелька</h1>
     <button onclick="connectWallet()">Подключить кошелёк</button>
     <div id="status">Статус: не подключён</div>
     <script src="app.js"></script>
